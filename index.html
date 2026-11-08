@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企業法 正誤問題集 Ver.2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f6f2;--sf:#fff;--sf2:#f0efe9;--bd:#e2e0d8;--bd2:#ccc9be;--tx:#1a1916;--tx2:#6b6860;--tx3:#9e9b93;--bl:#185FA5;--blb:#E6F1FB;--blbd:#85B7EB;--gr:#27500A;--grb:#EAF3DE;--grbd:#97C459;--rd:#791F1F;--rdb:#FCEBEB;--rdbd:#F09595;--am:#854F0B;--amb:#FAEEDA;--ambd:#FAC775;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--tx);font-size:15px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:18px;margin-bottom:12px}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card h2{font-size:13px;color:var(--tx2);margin-bottom:8px;font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip,.btn{font:inherit;border:1px solid var(--bd2);background:var(--sf);border-radius:20px;padding:6px 14px;cursor:pointer;color:var(--tx)}
+.chip.on{background:var(--bl);border-color:var(--bl);color:#fff}
+.btn{border-radius:8px;padding:10px 18px;font-weight:700}
+.btn.pri{background:var(--bl);color:#fff;border-color:var(--bl)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+select,input[type=text]{font:inherit;padding:6px 8px;border:1px solid var(--bd2);border-radius:6px;background:var(--sf)}
+input[type=text]{width:72px;text-align:right}
+.ch{border-top:1px solid var(--bd)}.ch:first-child{border-top:0}
+.chh{display:flex;align-items:center;gap:8px;padding:8px 2px}
+.chh .nm{flex:1;background:none;border:0;font:inherit;text-align:left;cursor:pointer;font-weight:700}
+.meta{font-size:12px;color:var(--tx2);white-space:nowrap}
+.sec{display:flex;align-items:center;gap:8px;padding:5px 2px 5px 28px;font-size:14px}.sec .nm{flex:1}
+input[type=checkbox]{width:18px;height:18px}
+.hide{display:none!important}
+#sum{font-weight:700;margin:6px 0}
+.warn{background:var(--amb);border:1px solid var(--ambd);color:var(--am);padding:8px 12px;border-radius:8px;margin-bottom:10px;font-size:13px}
+.err{background:var(--rdb);border:1px solid var(--rdbd);color:var(--rd);padding:16px;border-radius:10px}
+.hd{font-size:13px;color:var(--tx2);margin-bottom:6px}
+.bdg{display:inline-block;font-size:12px;font-weight:700;border-radius:4px;padding:1px 8px;border:1px solid;margin-right:6px}
+.iA{background:#FCEBEB;color:#A32D2D;border-color:#F09595}.iB{background:#FAEEDA;color:#854F0B;border-color:#FAC775}.iC{background:#F1EFE8;color:#5F5E5A;border-color:#D3D1C7}
+.law{background:var(--blb);color:#0C447C;border:1px solid var(--blbd);border-radius:6px;padding:2px 10px;font-size:13px;display:inline-block;margin:6px 0}
+.q{font-size:17px;margin:10px 0 14px;line-height:1.8}
+.hist span{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;margin-right:4px;font-size:12px;font-weight:700}
+.hok{background:var(--grb);color:var(--gr)}.hng{background:var(--rdb);color:var(--rd)}.hun{background:var(--amb);color:var(--am)}
+.ans{display:flex;gap:10px;margin-top:12px}.ans .btn{flex:1;font-size:20px;padding:14px}
+.star{background:none;border:0;font-size:24px;cursor:pointer;color:var(--tx3)}.star.on{color:#E0A100}
+.ban{padding:10px 14px;border-radius:8px;font-weight:700;margin-bottom:10px}
+.ban.ok{background:var(--grb);color:var(--gr);border:1px solid var(--grbd)}.ban.ng{background:var(--rdb);color:var(--rd);border:1px solid var(--rdbd)}.ban.un{background:var(--amb);color:var(--am);border:1px solid var(--ambd)}
+.ex{white-space:pre-line;margin:8px 0}
+.top{display:flex;justify-content:space-between;align-items:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>企業法 正誤問題集</h1>
+<div id="warn" class="warn hide">履歴が保存されません（プライベートブラウズ等の可能性）。クイズは使えますが、履歴・★は残りません。</div>
+<div id="err" class="err hide"></div>
+<div id="load">読み込み中…</div>
+<div id="sel" class="hide">
+ <div class="card"><h2>出題モード</h2><div class="row" id="f-mode"></div></div>
+ <div class="card"><h2>章・節</h2>
+  <div class="row" style="margin-bottom:6px"><button class="chip" id="all-on">すべて選択</button><button class="chip" id="all-off">すべて解除</button></div>
+  <div id="chs"></div></div>
+ <div class="card"><h2>重要度（複数選択可。未選択はすべて）</h2><div class="row" id="f-imp"></div></div>
+ <div class="card"><h2>出典</h2><div class="row" id="f-src"></div></div>
+ <div class="card"><h2>回答状況（最新の1回で判定）</h2><div class="row" id="f-stat"></div></div>
+ <div class="card"><div class="row">
+  <label>解答回数 <input type="text" inputmode="numeric" id="f-att"> 回以下</label>
+  <label>正答率 <input type="text" inputmode="numeric" id="f-rate"> ％以下</label>
+  <label>出題数 最大 <input type="text" inputmode="numeric" id="f-max"> 問</label></div>
+  <div class="row" style="margin-top:10px"><label><input type="checkbox" id="f-star"> ★をつけた問題のみ（<span id="starn">0</span>問）</label></div></div>
+ <div id="sum"></div><div class="row"><button class="btn pri" id="start">開始</button><span class="meta" id="why"></span></div>
+</div>
+<div id="quiz" class="hide"></div>
+</div>
+<script>
+'use strict';
+const HK='cpa_quiz_history_v2',SK='cpa_quiz_stars_v1';
+let Q=[],BY={},H={},S={},storeOK=true,Z=null;
+const F={mode:'seq',units:new Set(),imp:new Set(),src:'all',stat:'all',att:null,rate:null,star:false,max:null};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function warn(){$('#warn').classList.remove('hide')}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){storeOK=false;return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){storeOK=false;warn()}}
+function loadStore(){
+  try{localStorage.setItem('cpa_quiz_probe','1');localStorage.removeItem('cpa_quiz_probe')}catch(e){storeOK=false}
+  let h=null,s=null;
+  try{h=JSON.parse(lsGet(HK)||'null');s=JSON.parse(lsGet(SK)||'null')}catch(e){h=null;s=null}
+  if(h&&typeof h==='object'&&!Array.isArray(h)){
+    for(const k of Object.keys(h)){
+      if(!Array.isArray(h[k]))continue;
+      const ok=h[k].filter(x=>x&&['o','x','u'].includes(x.a)&&typeof x.ok==='boolean');
+      if(ok.length)H[k]=ok;
+    }
+  }
+  if(s&&typeof s==='object'&&!Array.isArray(s)){for(const k of Object.keys(s))if(s[k]===true)S[k]=true}
+  if(!storeOK)warn();
+}
+const saveH=()=>lsSet(HK,JSON.stringify(H));
+const saveS=()=>lsSet(SK,JSON.stringify(S));
+const hist=id=>H[id]||[];
+const st=id=>{const h=hist(id);if(!h.length)return'none';const l=h[h.length-1];return l.a==='u'?'unk':l.ok?'ok':'ng'};
+const rateOf=id=>{const h=hist(id);return h.length?Math.round(h.filter(x=>x.ok).length/h.length*100):null};
+const uk=q=>q.section_no==null?'c'+q.chapter_no:q.chapter_no+'-'+q.section_no;
+function targets(){
+  return Q.filter(q=>{
+    if(!F.units.has(uk(q)))return false;
+    if(F.imp.size&&!F.imp.has(q.importance))return false;
+    if(F.src==='y'&&!q.source)return false;
+    if(F.src==='n'&&q.source)return false;
+    if(F.stat!=='all'&&st(q.id)!==F.stat)return false;
+    if(F.att!=null&&hist(q.id).length>F.att)return false;
+    if(F.rate!=null){const r=rateOf(q.id);if(r==null||r>F.rate)return false}
+    if(F.star&&!S[q.id])return false;
+    return true;
+  });
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pick(){
+  let l=targets();
+  if(F.mode==='rnd')l=shuffle(l);
+  const n=l.length;
+  if(F.max!=null&&F.max<n)l=l.slice(0,F.max);
+  return{total:n,list:l};
+}
+/* ---------- 選択画面 ---------- */
+let CH=[];
+function buildChapters(){
+  const m=new Map();
+  for(const q of Q){
+    if(!m.has(q.chapter_no))m.set(q.chapter_no,{no:q.chapter_no,name:q.chapter,units:new Map()});
+    const c=m.get(q.chapter_no),k=uk(q);
+    if(!c.units.has(k))c.units.set(k,{key:k,name:q.section_no==null?q.chapter:q.section_no+'．'+q.section});
+  }
+  CH=[...m.values()].sort((a,b)=>a.no-b.no).map(c=>({no:c.no,name:c.name,units:[...c.units.values()],single:c.units.size===1&&[...c.units.keys()][0]==='c'+c.no}));
+  const root=$('#chs');root.innerHTML='';
+  for(const c of CH){
+    const d=document.createElement('div');d.className='ch';d.dataset.ch=c.no;
+    let h='<div class="chh"><input type="checkbox" class="cc"><button class="nm">第'+c.no+'章 '+esc(c.name)+'</button><span class="meta cm"></span></div>';
+    if(!c.single){h+='<div class="cb hide">'+c.units.map(u=>'<div class="sec" data-k="'+u.key+'"><input type="checkbox" class="sc"><span class="nm">'+esc(u.name)+'</span><span class="meta sm"></span></div>').join('')+'</div>'}
+    d.innerHTML=h;root.appendChild(d);
+    for(const u of c.units)F.units.add(u.key);
+  }
+}
+function syncUI(){
+  const cnt={},ok={},ans={};
+  for(const q of Q){const k=uk(q);cnt[k]=(cnt[k]||0)+1;const h=hist(q.id);ans[k]=(ans[k]||0)+h.length;ok[k]=(ok[k]||0)+h.filter(x=>x.ok).length}
+  const pc=(a,b)=>b?Math.round(a/b*100)+'%':'－';
+  for(const c of CH){
+    const d=$('.ch[data-ch="'+c.no+'"]');
+    const n=c.units.filter(u=>F.units.has(u.key)).length;
+    const cc=d.querySelector('.cc');cc.checked=n===c.units.length;cc.indeterminate=n>0&&n<c.units.length;
+    let tc=0,ta=0,to=0;
+    for(const u of c.units){tc+=cnt[u.key]||0;ta+=ans[u.key]||0;to+=ok[u.key]||0}
+    d.querySelector('.cm').textContent=tc+'問 / 正答率 '+pc(to,ta);
+    if(!c.single)for(const u of c.units){
+      const s=d.querySelector('.sec[data-k="'+u.key+'"]');
+      s.querySelector('.sc').checked=F.units.has(u.key);
+      s.querySelector('.sm').textContent=(cnt[u.key]||0)+'問 / '+pc(ok[u.key]||0,ans[u.key]||0);
+    }
+  }
+  $('#starn').textContent=Object.keys(S).filter(k=>BY[k]).length;
+  const p=pick();
+  $('#sum').textContent='対象'+p.total+'問 → 今回の出題'+p.list.length+'問';
+  $('#start').disabled=p.total===0;
+  $('#why').textContent=p.total===0?'条件に合う問題がありません。条件をゆるめてください。':'';
+}
+function chips(id,opts,get,set,multi){
+  const el=$(id);el.innerHTML='';
+  for(const [v,l] of opts){
+    const b=document.createElement('button');b.className='chip';b.textContent=l;b.dataset.v=v;
+    b.onclick=()=>{set(v);paint()};el.appendChild(b);
+  }
+  function paint(){for(const b of el.children)b.classList.toggle('on',get(b.dataset.v));syncUI()}
+  paint();return paint;
+}
+function normNum(s){
+  s=String(s).replace(/[０-９．]/g,c=>c==='．'?'.':String.fromCharCode(c.charCodeAt(0)-0xFEE0)).trim();
+  return /^\d+(\.\d+)?$/.test(s)?Math.round(parseFloat(s)):null;
+}
+function bindNum(id,key,fix){
+  const el=$(id);
+  el.addEventListener('input',()=>{const n=normNum(el.value);F[key]=n==null?null:fix(n);syncUI()});
+  el.addEventListener('blur',()=>{const n=normNum(el.value);const v=n==null?null:fix(n);F[key]=v;el.value=v==null?'':String(v);syncUI()});
+}
+function initSelect(){
+  buildChapters();
+  chips('#f-mode',[['seq','順番'],['rnd','ランダム']],v=>F.mode===v,v=>{F.mode=v});
+  chips('#f-imp',[['all','すべて'],['A','A'],['B','B'],['C','C']],
+    v=>v==='all'?(F.imp.size===0||F.imp.size===3):F.imp.has(v),
+    v=>{if(v==='all')F.imp.clear();else if(F.imp.has(v))F.imp.delete(v);else F.imp.add(v)});
+  chips('#f-src',[['all','すべて'],['y','あり（過去問）'],['n','なし']],v=>F.src===v,v=>{F.src=v});
+  chips('#f-stat',[['all','すべて'],['none','未回答'],['ok','正解'],['ng','不正解'],['unk','わからない']],v=>F.stat===v,v=>{F.stat=v});
+  bindNum('#f-att','att',n=>Math.max(0,n));
+  bindNum('#f-rate','rate',n=>Math.min(100,Math.max(0,n)));
+  bindNum('#f-max','max',n=>n<1?null:n);
+  $('#f-star').onchange=e=>{F.star=e.target.checked;syncUI()};
+  $('#all-on').onclick=()=>{CH.forEach(c=>c.units.forEach(u=>F.units.add(u.key)));syncUI()};
+  $('#all-off').onclick=()=>{F.units.clear();syncUI()};
+  $('#chs').addEventListener('click',e=>{
+    if(e.target.classList.contains('nm')&&e.target.tagName==='BUTTON'){const b=e.target.closest('.ch').querySelector('.cb');if(b)b.classList.toggle('hide')}
+  });
+  $('#chs').addEventListener('change',e=>{
+    const ch=CH.find(c=>c.no==e.target.closest('.ch').dataset.ch);
+    if(e.target.classList.contains('cc')){for(const u of ch.units){e.target.checked?F.units.add(u.key):F.units.delete(u.key)}}
+    else if(e.target.classList.contains('sc')){const k=e.target.closest('.sec').dataset.k;e.target.checked?F.units.add(k):F.units.delete(k)}
+    syncUI();
+  });
+  $('#start').onclick=()=>{const p=pick();if(p.list.length)startQuiz(p.list.map(q=>q.id))};
+  syncUI();
+}
+/* ---------- クイズ ---------- */
+function show(id){for(const x of ['#sel','#quiz'])$(x).classList.toggle('hide',x!==id)}
+function startQuiz(ids){Z={ids,i:0,res:[],last:null};show('#quiz');renderQ()}
+const histHtml=id=>{const h=hist(id);return h.length?h.map(x=>x.a==='u'?'<span class="hun">？</span>':x.ok?'<span class="hok">●</span>':'<span class="hng">✕</span>').join(''):'<span style="width:auto;color:var(--tx3)">なし（初回）</span>'};
+const starBtn=id=>'<button class="star'+(S[id]?' on':'')+'" data-star="'+id+'" aria-label="★">'+(S[id]?'★':'☆')+'</button>';
+function headHtml(q){
+  const p=[q.chapter,q.section,q.subsection,q.item].filter(Boolean).join(' › ');
+  return '<div class="hd">'+esc(p)+'</div><div class="top"><div><span class="bdg i'+esc(q.importance)+'">'+esc(q.importance)+'</span>'
+   +(q.source?'<span class="meta">'+esc(q.source)+'</span>':'')+'</div><span class="meta">'+(Z.i+1)+' / '+Z.ids.length+'</span></div>';
+}
+function renderQ(){
+  const q=BY[Z.ids[Z.i]];
+  $('#quiz').innerHTML='<div class="card">'+headHtml(q)+'<div class="q">'+esc(q.question)+'</div>'
+   +'<div class="top"><div class="hist">過去：'+histHtml(q.id)+'</div>'+starBtn(q.id)+'</div>'
+   +'<div class="ans"><button class="btn" data-a="o">○</button><button class="btn" data-a="x">✕</button><button class="btn" data-a="u">？</button></div></div>';
+  window.scrollTo(0,0);
+}
+function answer(a){
+  const q=BY[Z.ids[Z.i]];
+  const ok=a!=='u'&&((a==='o')===q.is_correct);
+  (H[q.id]=H[q.id]||[]).push({a,ok,ts:Date.now()});saveH();
+  Z.res.push({id:q.id,r:a==='u'?'unk':ok?'ok':'ng'});
+  const lbl={o:'○（正しい）',x:'✕（誤り）',u:'？（わからない）'}[a];
+  const last=Z.i+1>=Z.ids.length;
+  $('#quiz').innerHTML='<div class="card">'+headHtml(q)
+   +'<div class="ban '+(a==='u'?'un':ok?'ok':'ng')+'">'+(a==='u'?'わからない':ok?'正解':'不正解')+'　あなたの回答：'+lbl+'／正解：'+(q.is_correct?'○（正しい文）':'✕（誤りの文）')+'</div>'
+   +'<div class="q">'+esc(q.question)+'</div>'
+   +(q.law_ref?'<div class="law">'+esc(q.law_ref)+'</div>':'')
+   +'<div class="ex">'+(q.explanation?esc(q.explanation):'（解説はありません）')+'</div>'
+   +'<div class="top"><div class="hist">履歴：'+histHtml(q.id)+'</div>'+starBtn(q.id)+'</div>'
+   +'<div class="ans"><button class="btn pri" data-next="1">'+(last?'結果を見る':'次へ')+'</button></div></div>';
+  window.scrollTo(0,0);
+}
+function done(){
+  const n=Z.res.length,o=Z.res.filter(x=>x.r==='ok').length,ng=Z.res.filter(x=>x.r==='ng').length,u=n-o-ng;
+  const retry=Z.res.filter(x=>x.r!=='ok').map(x=>x.id);
+  $('#quiz').innerHTML='<div class="card"><h2>完了</h2><div class="q">'+n+'問中 正解'+o+'・不正解'+ng+'・わからない'+u+'（正答率 '+(n?Math.round(o/n*100):0)+'%）</div>'
+   +'<div class="row"><button class="btn pri" data-retry="1"'+(retry.length?'':' disabled')+'>不正解のみ再挑戦（'+retry.length+'問）</button><button class="btn" data-back="1">選択画面に戻る</button></div></div>';
+  Z.retry=retry;
+}
+$('#quiz').addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t||!Z)return;
+  if(t.dataset.a)answer(t.dataset.a);
+  else if(t.dataset.next){Z.i++;Z.i<Z.ids.length?renderQ():done()}
+  else if(t.dataset.star){const id=t.dataset.star;if(S[id])delete S[id];else S[id]=true;saveS();document.querySelectorAll('[data-star="'+id+'"]').forEach(b=>{b.classList.toggle('on',!!S[id]);b.textContent=S[id]?'★':'☆'})}
+  else if(t.dataset.retry){const r=Z.retry;if(r&&r.length)startQuiz(F.mode==='rnd'?shuffle(r):r)}
+  else if(t.dataset.back){Z=null;show('#sel');syncUI()}
+});
+/* ---------- 起動 ---------- */
+function fail(msg){
+  $('#load').classList.add('hide');
+  const e=$('#err');e.classList.remove('hide');
+  e.innerHTML='<b>問題データを読み込めませんでした。</b><br>'+esc(msg)+'<br>index.html と questions_kigyouhou.json が同じ場所にあるか、ネットワーク接続を確認し、再読み込みしてください。<br><br><button class="btn" onclick="location.reload()">再読み込み</button>';
+}
+async function boot(){
+  try{
+    const r=await fetch('questions_kigyouhou.json',{cache:'no-cache'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||!d.length||!d.every(q=>q&&typeof q.id==='number'&&typeof q.question==='string'&&typeof q.is_correct==='boolean'))throw new Error('データの形式が正しくありません');
+    Q=d;for(const q of Q)BY[q.id]=q;
+  }catch(e){fail(e&&e.message?e.message:String(e));return}
+  loadStore();initSelect();
+  $('#load').classList.add('hide');show('#sel');
+  window.__t={F,H,S,targets,pick,Q};
+}
+boot();
+</script>
+</body>
+</html>
